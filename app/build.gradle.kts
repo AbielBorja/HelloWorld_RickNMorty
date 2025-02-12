@@ -4,6 +4,8 @@ plugins {
 }
 
 android {
+
+
     namespace = "com.example.hellowordl_ricknmorty"
     compileSdk = 35
 
@@ -33,16 +35,35 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+    buildFeatures {
+        viewBinding = true
+    }
+    packagingOptions {
+        exclude("META-INF/INDEX.LIST")
+        exclude("META-INF/io.netty.versions.properties")
+        exclude("META-INF/DEPENDENCIES")
+    }
 }
 
 dependencies {
+
+    implementation(libs.androidx.cardview)
+    implementation(libs.retrofit)
+    implementation(libs.moshi.kotlin)
+    implementation(libs.converter.moshi)
+    implementation(libs.coil)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.firebase.appdistribution.gradle)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    implementation("androidx.constraintlayout:constraintlayout:2.0.4")
+
+
+
 }
