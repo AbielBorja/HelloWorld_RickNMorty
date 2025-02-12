@@ -4,13 +4,11 @@ plugins {
 }
 
 android {
-
-
-    namespace = "com.example.hellowordl_ricknmorty"
+    namespace = "com.example.rickandmorty"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.hellowordl_ricknmorty"
+        applicationId = "com.example.rickandmorty"
         minSdk = 24
         targetSdk = 35
         versionCode = 1
@@ -35,35 +33,28 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
-    buildFeatures {
-        viewBinding = true
-    }
-    packagingOptions {
-        exclude("META-INF/INDEX.LIST")
-        exclude("META-INF/io.netty.versions.properties")
-        exclude("META-INF/DEPENDENCIES")
+
+    buildFeatures{
+        viewBinding=true
     }
 }
 
 dependencies {
 
-    implementation(libs.androidx.cardview)
-    implementation(libs.retrofit)
-    implementation(libs.moshi.kotlin)
-    implementation(libs.converter.moshi)
-    implementation(libs.coil)
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+
+    implementation ("com.squareup.moshi:moshi-kotlin:1.9.0")
+
+    implementation ("com.squareup.retrofit2:converter-moshi:2.0.0")
+
+    implementation("io.coil-kt:coil:1.3.0")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
-    implementation(libs.firebase.appdistribution.gradle)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    implementation("androidx.constraintlayout:constraintlayout:2.0.4")
-
-
-
 }
