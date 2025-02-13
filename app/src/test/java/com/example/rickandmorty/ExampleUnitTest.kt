@@ -1,4 +1,4 @@
-package com.example.hellowordl_ricknmorty
+package com.example.rickandmorty
 
 import org.junit.Test
 
