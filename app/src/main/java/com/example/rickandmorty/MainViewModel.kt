@@ -11,38 +11,62 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MainViewModel(private val repository: Repository
-    = Repository(ApiClient.apiService)): ViewModel() {
+class MainViewModel(private val repository: Repository = Repository(ApiClient.apiService)) : ViewModel() {
 
-        private var _charactersLiveData = MutableLiveData<ScreenState<List<Character>?>>()
-        val characterLiveData:LiveData<ScreenState<List<Character>?>>
-            get() = _charactersLiveData
+    private val _charactersLiveData = MutableLiveData<ScreenState<List<Character>?>>()
+    val characterLiveData: LiveData<ScreenState<List<Character>?>>
+        get() = _charactersLiveData
 
+    private val charactersList = mutableListOf<Character>()
+    private var currentPage = 1
+    private var isLoading = false
+    var hasMorePages = true
+    private var totalPages = 1
 
     init {
-        fetchCharacter()
+        fetchCharacters()
     }
-    private fun fetchCharacter(){
-        val client = repository.getCharacters("1")
-        _charactersLiveData.postValue(ScreenState.Loading(null))
-        client.enqueue(object : Callback<CharacterResponse>{
-            override fun onResponse(
-                call: Call<CharacterResponse>,
-                response: Response<CharacterResponse>
-            ) {
-                if(response.isSuccessful){
-                    _charactersLiveData.postValue(ScreenState.Success(response.body()?.result))
-                }else{
-                    _charactersLiveData.postValue(ScreenState.Error(response.code().toString()))
+
+    fun fetchCharacters() {
+        if (isLoading || !hasMorePages) return
+        isLoading = true
+
+        Log.d("PAGINACIÓN", "Cargando página: $currentPage de $totalPages")
+
+        _charactersLiveData.postValue(ScreenState.Loading(charactersList))
+        val client = repository.getCharacters(currentPage.toString())
+
+        client.enqueue(object : Callback<CharacterResponse> {
+            override fun onResponse(call: Call<CharacterResponse>, response: Response<CharacterResponse>) {
+                isLoading = false
+                if (response.isSuccessful) {
+                    response.body()?.let { characterResponse ->
+                        charactersList.addAll(characterResponse.result)
+                        _charactersLiveData.postValue(ScreenState.Success(charactersList))
+
+
+                        if (currentPage == 1) {
+                            totalPages = characterResponse.pageInfo.pages
+                        }
+
+
+                        if (characterResponse.pageInfo.next != null) {
+                            currentPage++
+                        } else {
+                            hasMorePages = false
+                            Log.d("PAGINACIÓN", "Se cargaron todos los personajes.")
+                        }
+                    }
+                } else {
+                    _charactersLiveData.postValue(ScreenState.Error(response.code().toString(), charactersList))
                 }
             }
 
             override fun onFailure(call: Call<CharacterResponse>, t: Throwable) {
-                Log.d("Failure",t.message.toString())
-                _charactersLiveData.postValue(ScreenState.Error(t.message.toString()))
+                isLoading = false
+                _charactersLiveData.postValue(ScreenState.Error(t.message.toString(), charactersList))
             }
         })
-
     }
-
 }
+

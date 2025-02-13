@@ -14,6 +14,8 @@ import kotlin.reflect.jvm.internal.impl.metadata.ProtoBuf.Visibility
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var adapter: MainAdapter
+    private lateinit var recyclerView: RecyclerView
     private val viewModel: MainViewModel by lazy {
         ViewModelProvider(this).get(MainViewModel::class.java)
     }
@@ -23,34 +25,61 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
 
+        recyclerView = findViewById(R.id.charactersRv)
+        val pb = findViewById<ProgressBar>(R.id.progressBar)
+
+        adapter = MainAdapter(mutableListOf())
+        recyclerView.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+        recyclerView.adapter = adapter
+
         viewModel.characterLiveData.observe(this, { state ->
-            processCharacterResponse(state)
+            when (state) {
+                is ScreenState.Loading -> pb.visibility = View.VISIBLE
+                is ScreenState.Success -> {
+                    pb.visibility = View.GONE
+                    state.data?.let { adapter.updateData(it) }
+                }
+                is ScreenState.Error -> {
+                    pb.visibility = View.GONE
+                    Snackbar.make(recyclerView, state.message!!, Snackbar.LENGTH_LONG).show()
+                }
+            }
+        })
+
+
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                val layoutManager = recyclerView.layoutManager as StaggeredGridLayoutManager
+                val lastVisibleItemPositions = layoutManager.findLastVisibleItemPositions(null)
+                val lastVisibleItem = lastVisibleItemPositions.maxOrNull() ?: 0
+                val totalItemCount = layoutManager.itemCount
+
+                if (lastVisibleItem >= totalItemCount - 4) {
+                    viewModel.fetchCharacters()
+                }
+            }
+        })
+
+        viewModel.characterLiveData.observe(this, { state ->
+            when (state) {
+                is ScreenState.Loading -> pb.visibility = View.VISIBLE
+                is ScreenState.Success -> {
+                    pb.visibility = View.GONE
+                    state.data?.let { adapter.updateData(it) }
+
+                    // Mostrar mensaje cuando se cargaron todos
+                    if (!viewModel.hasMorePages) {
+                        Snackbar.make(recyclerView, "Se han cargado todos los personajes", Snackbar.LENGTH_LONG).show()
+                    }
+                }
+                is ScreenState.Error -> {
+                    pb.visibility = View.GONE
+                    Snackbar.make(recyclerView, state.message!!, Snackbar.LENGTH_LONG).show()
+                }
+            }
         })
 
     }
-    private fun processCharacterResponse(state: ScreenState<List<Character>?>){
-
-        val pb = findViewById<ProgressBar>(R.id.progressBar)
-
-        when(state){
-            is ScreenState.Loading ->{
-                pb.visibility = View.VISIBLE
-            }
-            is ScreenState.Success -> {
-                pb.visibility = View.GONE
-                if(state.data != null){
-                    val adapter = MainAdapter(state.data)
-                    val recyclerView = findViewById<RecyclerView>(R.id.charactersRv)
-                    recyclerView?.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
-                    recyclerView?.adapter = adapter
-                }
-            }
-
-            is ScreenState.Error -> {
-                pb.visibility = View.GONE
-                val view = pb.rootView
-                Snackbar.make(view,state.message!!, Snackbar.LENGTH_LONG).show()
-            }
-        }
-    }
 }
+
