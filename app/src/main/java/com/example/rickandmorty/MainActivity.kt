@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
         val pb = findViewById<ProgressBar>(R.id.progressBar)
 
         adapter = MainAdapter(mutableListOf())
-        recyclerView.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+        recyclerView.layoutManager = StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
         recyclerView.adapter = adapter
 
         viewModel.characterLiveData.observe(this, { state ->
@@ -67,8 +67,6 @@ class MainActivity : AppCompatActivity() {
                 is ScreenState.Success -> {
                     pb.visibility = View.GONE
                     state.data?.let { adapter.updateData(it) }
-
-                    // Mostrar mensaje cuando se cargaron todos
                     if (!viewModel.hasMorePages) {
                         Snackbar.make(recyclerView, "Se han cargado todos los personajes", Snackbar.LENGTH_LONG).show()
                     }

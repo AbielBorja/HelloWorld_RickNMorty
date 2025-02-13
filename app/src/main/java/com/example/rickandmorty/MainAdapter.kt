@@ -41,7 +41,7 @@ class MainAdapter(private val charactersList: MutableList<Character>) : Recycler
     fun updateData(newCharacters: List<Character>) {
         val startPos = charactersList.size
         charactersList.addAll(newCharacters)
-        notifyItemRangeInserted(startPos, newCharacters.size)
+            notifyItemRangeInserted(startPos, newCharacters.size)
     }
 }
 
