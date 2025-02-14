@@ -26,26 +26,15 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         recyclerView = findViewById(R.id.charactersRv)
-        val pb = findViewById<ProgressBar>(R.id.progressBar)
-
         adapter = MainAdapter(mutableListOf())
-        recyclerView.layoutManager = StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
+        recyclerView.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         recyclerView.adapter = adapter
 
-        viewModel.characterLiveData.observe(this, { state ->
-            when (state) {
-                is ScreenState.Loading -> pb.visibility = View.VISIBLE
-                is ScreenState.Success -> {
-                    pb.visibility = View.GONE
-                    state.data?.let { adapter.updateData(it) }
-                }
-                is ScreenState.Error -> {
-                    pb.visibility = View.GONE
-                    Snackbar.make(recyclerView, state.message!!, Snackbar.LENGTH_LONG).show()
-                }
-            }
-        })
 
+        viewModel.pageCharactersLiveData.observe(this, { newCharacters ->
+            adapter.hideLoading()
+            adapter.appendData(newCharacters)
+        })
 
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -56,28 +45,15 @@ class MainActivity : AppCompatActivity() {
                 val totalItemCount = layoutManager.itemCount
 
                 if (lastVisibleItem >= totalItemCount - 4) {
-                    viewModel.fetchCharacters()
-                }
-            }
-        })
-
-        viewModel.characterLiveData.observe(this, { state ->
-            when (state) {
-                is ScreenState.Loading -> pb.visibility = View.VISIBLE
-                is ScreenState.Success -> {
-                    pb.visibility = View.GONE
-                    state.data?.let { adapter.updateData(it) }
-                    if (!viewModel.hasMorePages) {
-                        Snackbar.make(recyclerView, "Se han cargado todos los personajes", Snackbar.LENGTH_LONG).show()
+                    if (viewModel.hasMorePages) {
+                        adapter.showLoading()
+                        viewModel.fetchCharacters()
                     }
                 }
-                is ScreenState.Error -> {
-                    pb.visibility = View.GONE
-                    Snackbar.make(recyclerView, state.message!!, Snackbar.LENGTH_LONG).show()
-                }
             }
         })
-
     }
 }
+
+
 
