@@ -10,32 +10,22 @@ import coil.load
 import coil.transform.CircleCropTransformation
 import android.widget.ImageView
 
+class MainAdapter(
+    private val charactersList: MutableList<Character>
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-class MainAdapter(private val charactersList: MutableList<Character>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
-    private val VIEW_TYPE_ITEM = 0
-    private val VIEW_TYPE_LOADING = 1
-    private var isLoading = false
-
-    inner class MainViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bindData(character: Character) {
-            val name = itemView.findViewById<TextView>(R.id.name)
-            val image = itemView.findViewById<ImageView>(R.id.image)
-
-            name.text = character.characterName
-            image.load(character.characterImage) {
-                transformations(CircleCropTransformation())
-            }
-        }
+    companion object {
+        const val VIEW_TYPE_ITEM = 0
+        const val VIEW_TYPE_LOADING = 1
     }
 
-    inner class LoadingViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+    private var isLoading: Boolean = false
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == VIEW_TYPE_ITEM) {
-            MainViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.view_item, parent, false))
+            CharacterViewHolder.create(parent)
         } else {
-            LoadingViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.loading_item, parent, false))
+            LoadingViewHolder.create(parent)
         }
     }
 
@@ -43,14 +33,14 @@ class MainAdapter(private val charactersList: MutableList<Character>) : Recycler
         return if (position < charactersList.size) VIEW_TYPE_ITEM else VIEW_TYPE_LOADING
     }
 
-    override fun getItemCount(): Int {
-        return charactersList.size + if (isLoading) 1 else 0
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        if (holder is CharacterViewHolder) {
+            holder.bind(charactersList[position])
+        }
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (holder is MainViewHolder) {
-            holder.bindData(charactersList[position])
-        }
+    override fun getItemCount(): Int {
+        return charactersList.size + if (isLoading) 1 else 0
     }
 
     fun appendData(newCharacters: List<Character>) {
@@ -73,6 +63,7 @@ class MainAdapter(private val charactersList: MutableList<Character>) : Recycler
         }
     }
 }
+
 
 
 
