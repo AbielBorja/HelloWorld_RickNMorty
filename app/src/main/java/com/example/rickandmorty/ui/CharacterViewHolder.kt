@@ -6,18 +6,19 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.rickandmorty.model.Character
 import coil.load
 import coil.transform.CircleCropTransformation
 import com.example.rickandmorty.R
+import com.example.rickandmorty.model.Character
 
-class CharacterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-    private val nameTextView: TextView = itemView.findViewById(R.id.name)
-    private val imageView: ImageView = itemView.findViewById(R.id.image)
+class CharacterViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    private val nameTextView: TextView = view.findViewById(R.id.name)
+    private val speciesTextView: TextView = view.findViewById(R.id.species)
+    private val imageView: ImageView = view.findViewById(R.id.image)
 
     fun bind(character: Character) {
         nameTextView.text = character.characterName
+        speciesTextView.text = character.species
         imageView.load(character.characterImage) {
             transformations(CircleCropTransformation())
         }
