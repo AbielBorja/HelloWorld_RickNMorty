@@ -18,7 +18,9 @@ class MainAdapter(private val charactersList: MutableList<Character>) : Recycler
     override fun getItemViewType(position: Int) = if (position < charactersList.size) VIEW_TYPE_ITEM else VIEW_TYPE_LOADING
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (holder is CharacterViewHolder) holder.bind(charactersList[position])
+        if (holder is CharacterViewHolder && position < charactersList.size) {
+            holder.bind(charactersList[position])
+        }
     }
 
     override fun getItemCount() = charactersList.size + if (isLoading) 1 else 0
@@ -27,6 +29,12 @@ class MainAdapter(private val charactersList: MutableList<Character>) : Recycler
         val startPos = charactersList.size
         charactersList.addAll(newCharacters)
         notifyItemRangeInserted(startPos, newCharacters.size)
+    }
+
+    fun updateData(newList: List<Character>) {
+        charactersList.clear()
+        charactersList.addAll(newList)
+        notifyDataSetChanged()
     }
 
     fun showLoading() {
