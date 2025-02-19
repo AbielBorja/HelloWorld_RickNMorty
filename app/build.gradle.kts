@@ -41,17 +41,17 @@ android {
 
 dependencies {
 
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation(libs.retrofit)
 
-    implementation ("com.squareup.moshi:moshi-kotlin:1.9.0")
+    implementation (libs.moshi.kotlin)
 
-    implementation ("com.squareup.retrofit2:converter-moshi:2.0.0")
+    implementation (libs.converter.moshi)
 
-    implementation("io.coil-kt:coil:1.3.0")
+    implementation(libs.coil)
 
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0-alpha02")
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
 
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.4.0-alpha02")
+    implementation(libs.androidx.lifecycle.livedata.ktx)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
