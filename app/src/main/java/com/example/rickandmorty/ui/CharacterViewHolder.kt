@@ -1,4 +1,4 @@
-package com.example.rickandmorty
+package com.example.rickandmorty.ui
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,9 +6,10 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.rickandmorty.network.Character
+import com.example.rickandmorty.model.Character
 import coil.load
 import coil.transform.CircleCropTransformation
+import com.example.rickandmorty.R
 
 class CharacterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 

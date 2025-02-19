@@ -1,15 +1,11 @@
-package com.example.rickandmorty
+package com.example.rickandmorty.ui
 import android.os.Bundle
-import android.view.View
-import android.widget.ProgressBar
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.example.rickandmorty.network.Character
-import com.google.android.material.snackbar.Snackbar
-import kotlin.reflect.jvm.internal.impl.metadata.ProtoBuf.Visibility
+import com.example.rickandmorty.R
 
 
 class MainActivity : AppCompatActivity() {
