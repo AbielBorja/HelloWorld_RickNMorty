@@ -54,21 +54,27 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun filterCharacters(query: String?) {
-        val filteredList = if (query.isNullOrEmpty()) {
-            dataList
+        if (query.isNullOrEmpty()) {
+            adapter.updateData(ArrayList(dataList))
         } else {
-            dataList.filter { it.characterName.contains(query, ignoreCase = true) }
+            val filteredList = dataList.filter { it.characterName.contains(query, ignoreCase = true) }
+            adapter.updateData(filteredList)
         }
-        adapter.updateData(filteredList)
     }
 
     private fun observeViewModel() {
         viewModel.pageCharactersLiveData.observe(this) { newCharacters ->
             adapter.hideLoading()
             dataList.addAll(newCharacters)
-            adapter.appendData(newCharacters)
+            val query = searchView.query.toString()
+            if (query.isNotEmpty()) {
+                filterCharacters(query)
+            } else {
+                adapter.appendData(newCharacters)
+            }
         }
     }
+
 
     private fun createScrollListener() = object : RecyclerView.OnScrollListener() {
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
