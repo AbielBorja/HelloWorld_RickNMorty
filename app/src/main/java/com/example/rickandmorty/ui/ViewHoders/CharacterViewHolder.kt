@@ -1,5 +1,7 @@
-package com.example.rickandmorty.ui
+package com.example.rickandmorty.ui.ViewHoders
 
+import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +12,7 @@ import coil.load
 import coil.transform.CircleCropTransformation
 import com.example.rickandmorty.R
 import com.example.rickandmorty.model.Character
+import com.example.rickandmorty.ui.CharacterDetailActivity
 
 class CharacterViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     private val nameTextView: TextView = view.findViewById(R.id.name)
@@ -22,6 +25,13 @@ class CharacterViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         imageView.load(character.characterImage) {
             transformations(CircleCropTransformation())
         }
+
+        itemView.setOnClickListener {
+            val intent = Intent(itemView.context, CharacterDetailActivity::class.java)
+            intent.putExtra("character", character)
+            itemView.context.startActivity(intent)
+            Log.d("CharacterViewHolder", "Iniciando CharacterDetailActivity con: $character")
+        }
     }
 
     companion object {
@@ -30,4 +40,6 @@ class CharacterViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             return CharacterViewHolder(view)
         }
     }
+
+
 }

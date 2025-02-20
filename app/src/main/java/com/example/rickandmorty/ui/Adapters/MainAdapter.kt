@@ -1,8 +1,10 @@
-package com.example.rickandmorty.ui
+package com.example.rickandmorty.ui.Adapters
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.rickandmorty.model.Character
+import com.example.rickandmorty.ui.ViewHoders.CharacterViewHolder
+import com.example.rickandmorty.ui.ViewHoders.LoadingViewHolder
 
 class MainAdapter(private val charactersList: MutableList<Character>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     companion object {

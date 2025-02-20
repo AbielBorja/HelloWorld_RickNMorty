@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.rickandmorty.R
 import com.example.rickandmorty.model.Character
+import com.example.rickandmorty.ui.Adapters.MainAdapter
 
 class MainActivity : AppCompatActivity() {
     private lateinit var adapter: MainAdapter

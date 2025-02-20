@@ -1,4 +1,4 @@
-package com.example.rickandmorty.ui
+package com.example.rickandmorty.ui.ViewHoders
 
 import android.view.LayoutInflater
 import android.view.View
