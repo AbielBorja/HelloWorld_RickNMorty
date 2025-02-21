@@ -1,56 +1,109 @@
 package com.example.rickandmorty.ui.fragments
 
-import android.annotation.SuppressLint
-import androidx.fragment.app.viewModels
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import coil.transform.CircleCropTransformation
 import com.example.rickandmorty.R
 import com.example.rickandmorty.model.Character
-import com.example.rickandmorty.ui.fragmentsviewmodels.EpisodeListViewModel
+import com.example.rickandmorty.model.Episode
+import com.example.rickandmorty.network.ApiClient
+import com.example.rickandmorty.ui.Adapters.EpisodeAdapter
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class CharacterDetailFragment : Fragment() {
 
+    private lateinit var character: Character
+    private lateinit var rvEpisodes: RecyclerView
+    private lateinit var episodeAdapter: EpisodeAdapter
+    private val episodesList: MutableList<Episode> = mutableListOf()
+
     companion object {
-        private const val ARG_CHARACTER = "character"
         fun newInstance(character: Character?) = CharacterDetailFragment().apply {
-            arguments = Bundle().apply { putParcelable(ARG_CHARACTER, character) }
+            arguments = Bundle().apply {
+                putParcelable("character", character)
+            }
         }
     }
-
-    private var character: Character? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        character = arguments?.getParcelable(ARG_CHARACTER)
-        Log.d("CharacterDetailFragment", "Character recibido: $character")
+        character = arguments?.getParcelable("character")
+            ?: throw IllegalArgumentException("Character data is required")
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_character_detail, container, false)
     }
 
-    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        character?.let { char ->
 
-            view.findViewById<ImageView>(R.id.imageViewCharacter).load(char.characterImage) {
-                placeholder(R.drawable.baseline_accessibility_24)
-                error(R.drawable.baseline_clear_24)
-            }
-            view.findViewById<TextView>(R.id.textViewName).text = char.characterName
-            view.findViewById<TextView>(R.id.textViewStatus).text = "Status: ${char.status}"
-            view.findViewById<TextView>(R.id.textViewSpecies).text = "Species: ${char.species}"
-            view.findViewById<TextView>(R.id.textViewGender).text = "Gender: ${char.gender}"
-            view.findViewById<TextView>(R.id.textViewOrigin).text = "Origin: ${char.origin.name}"
-            view.findViewById<TextView>(R.id.textViewLocation).text = "Location: ${char.location.name}"
+        val imageViewCharacter = view.findViewById<ImageView>(R.id.imageViewCharacter)
+        val textViewName = view.findViewById<TextView>(R.id.textViewName)
+        val textViewStatus = view.findViewById<TextView>(R.id.textViewStatus)
+        val textViewSpecies = view.findViewById<TextView>(R.id.textViewSpecies)
+        val textViewGender = view.findViewById<TextView>(R.id.textViewGender)
+        val textViewOrigin = view.findViewById<TextView>(R.id.textViewOrigin)
+        val textViewLocation = view.findViewById<TextView>(R.id.textViewLocation)
+        rvEpisodes = view.findViewById(R.id.rvEpisodes)
+
+        imageViewCharacter.load(character.characterImage) {
+            transformations(CircleCropTransformation())
         }
+
+        textViewName.text = character.characterName
+        textViewStatus.text = character.status
+        textViewSpecies.text = character.species
+        textViewGender.text = character.gender
+        textViewOrigin.text = character.origin.name
+        textViewLocation.text = character.location.name
+
+        episodeAdapter = EpisodeAdapter(episodesList)
+        rvEpisodes.layoutManager = LinearLayoutManager(requireContext())
+        rvEpisodes.adapter = episodeAdapter
+
+        fetchEpisodes()
+    }
+
+    private fun fetchEpisodes() {
+
+        val episodeIds = character.episodes.map { url ->
+            url.substringAfterLast("/")
+        }
+
+        val idsParam = episodeIds.joinToString(separator = ",")
+
+
+        ApiClient.apiService.getEpisodes(idsParam).enqueue(object : Callback<List<Episode>> {
+            override fun onResponse(call: Call<List<Episode>>, response: Response<List<Episode>>) {
+                if (response.isSuccessful) {
+                    response.body()?.let { episodes ->
+                        episodesList.clear()
+                        episodesList.addAll(episodes)
+                        episodeAdapter.notifyDataSetChanged()
+                    }
+                } else {
+                    Log.e("EpisodeFetch", "Error en la respuesta: ${response.code()}")
+                }
+            }
+
+            override fun onFailure(call: Call<List<Episode>>, t: Throwable) {
+                Log.e("EpisodeFetch", "Fallo al obtener episodios", t)
+            }
+        })
     }
 }

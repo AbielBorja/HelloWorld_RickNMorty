@@ -12,5 +12,6 @@ data class Character(
     @Json(name = "status") val status: String,
     @Json(name = "gender") val gender: String,
     @Json(name = "origin") val origin: Origin,
-    @Json(name = "location") val location: Location
+    @Json(name = "location") val location: Location,
+    @Json(name = "episode") val episodes: List<String>
 ) : Parcelable
