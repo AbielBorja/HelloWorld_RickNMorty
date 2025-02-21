@@ -2,10 +2,10 @@ package com.example.rickandmorty.model
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
-import com.squareup.moshi.Json
+import com.google.gson.annotations.SerializedName
 
 @Parcelize
 data class Origin(
-    @Json(name = "name") val name: String,
-    @Json(name = "url") val url: String
+    @SerializedName("name") val name: String,
+    @SerializedName("url") val url: String
 ) : Parcelable

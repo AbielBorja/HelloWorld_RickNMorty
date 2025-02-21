@@ -12,5 +12,5 @@ interface RickAndMortyCharactersApiService {
     fun fetchCharacters(@Query("page") page: String): Call<CharacterResponse>
 
     @GET("episode/{ids}")
-    fun getEpisodes(@Path("ids") ids: String): Call<List<Episode>>
+    suspend fun getEpisodes(@Path("ids") ids: String): List<Episode>
 }

@@ -9,14 +9,19 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.rickandmorty.R
 import com.example.rickandmorty.model.Character
-import com.example.rickandmorty.ui.Adapters.MainAdapter
+import com.example.rickandmorty.ui.adapters.CharactersAdapter
 
 class ListOfCharactersMainActivity : AppCompatActivity() {
-    private lateinit var adapter: MainAdapter
+
+    private lateinit var charactersAdapter: CharactersAdapter
     private lateinit var recyclerView: RecyclerView
-    private val viewModel by lazy { ViewModelProvider(this).get(ListOfCharactersViewModel::class.java) }
     private lateinit var searchView: SearchView
-    private lateinit var dataList: ArrayList<Character>
+
+    // Renamed ViewModel to a more descriptive name (assumes you renamed it below)
+    private val viewModel by lazy { ViewModelProvider(this).get(CharactersViewModel::class.java) }
+
+    // Holds the complete list of characters for filtering
+    private val allCharacters = ArrayList<Character>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,14 +36,11 @@ class ListOfCharactersMainActivity : AppCompatActivity() {
     private fun setupRecyclerView() {
         recyclerView = findViewById(R.id.charactersRv)
         searchView = findViewById(R.id.search)
-        adapter = MainAdapter(mutableListOf())
+        charactersAdapter = CharactersAdapter(mutableListOf())
         recyclerView.layoutManager =
             StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
-        recyclerView.adapter = adapter
+        recyclerView.adapter = charactersAdapter
         recyclerView.addOnScrollListener(createScrollListener())
-
-
-        dataList = arrayListOf<Character>()
     }
 
     private fun setupSearchView() {
@@ -56,23 +58,24 @@ class ListOfCharactersMainActivity : AppCompatActivity() {
 
     private fun filterCharacters(query: String?) {
         if (query.isNullOrEmpty()) {
-            adapter.updateData(ArrayList(dataList))
+            charactersAdapter.updateCharacters(ArrayList(allCharacters))
         } else {
-            val filteredList =
-                dataList.filter { it.characterName.contains(query, ignoreCase = true) }
-            adapter.updateData(filteredList)
+            val filteredList = allCharacters.filter {
+                it.characterName.contains(query, ignoreCase = true)
+            }
+            charactersAdapter.updateCharacters(filteredList)
         }
     }
 
     private fun observeViewModel() {
         viewModel.pageCharactersLiveData.observe(this) { newCharacters ->
-            adapter.hideLoading()
-            dataList.addAll(newCharacters)
-            val query = searchView.query.toString()
-            if (query.isNotEmpty()) {
-                filterCharacters(query)
+            charactersAdapter.hideLoading()
+            allCharacters.addAll(newCharacters)
+            val currentQuery = searchView.query.toString()
+            if (currentQuery.isNotEmpty()) {
+                filterCharacters(currentQuery)
             } else {
-                adapter.appendData(newCharacters)
+                charactersAdapter.appendCharacters(newCharacters)
             }
         }
     }
@@ -83,7 +86,7 @@ class ListOfCharactersMainActivity : AppCompatActivity() {
             val layoutManager = recyclerView.layoutManager as StaggeredGridLayoutManager
             val lastVisibleItem = layoutManager.findLastVisibleItemPositions(null).maxOrNull() ?: 0
             if (lastVisibleItem >= layoutManager.itemCount - 4 && viewModel.hasMorePages) {
-                adapter.showLoading()
+                charactersAdapter.showLoading()
                 viewModel.fetchCharacters()
             }
         }
