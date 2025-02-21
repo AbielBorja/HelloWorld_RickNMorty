@@ -43,11 +43,8 @@ android {
 dependencies {
 
     implementation(libs.retrofit)
-
-    implementation (libs.moshi.kotlin)
-
-    implementation (libs.converter.moshi)
-
+    implementation(libs.gson)
+    implementation(libs.converter.gson)
     implementation(libs.coil)
 
     implementation(libs.androidx.lifecycle.viewmodel.ktx)

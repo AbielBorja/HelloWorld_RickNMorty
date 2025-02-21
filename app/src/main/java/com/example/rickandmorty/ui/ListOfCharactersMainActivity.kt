@@ -11,10 +11,10 @@ import com.example.rickandmorty.R
 import com.example.rickandmorty.model.Character
 import com.example.rickandmorty.ui.Adapters.MainAdapter
 
-class MainActivity : AppCompatActivity() {
+class ListOfCharactersMainActivity : AppCompatActivity() {
     private lateinit var adapter: MainAdapter
     private lateinit var recyclerView: RecyclerView
-    private val viewModel by lazy { ViewModelProvider(this).get(MainViewModel::class.java) }
+    private val viewModel by lazy { ViewModelProvider(this).get(ListOfCharactersViewModel::class.java) }
     private lateinit var searchView: SearchView
     private lateinit var dataList: ArrayList<Character>
 

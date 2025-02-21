@@ -15,7 +15,7 @@ import coil.transform.CircleCropTransformation
 import com.example.rickandmorty.R
 import com.example.rickandmorty.model.Character
 import com.example.rickandmorty.model.Episode
-import com.example.rickandmorty.network.ApiClient
+import com.example.rickandmorty.network.RickAndMortyBaseApiClient
 import com.example.rickandmorty.ui.Adapters.EpisodeAdapter
 import retrofit2.Call
 import retrofit2.Callback
@@ -88,7 +88,7 @@ class CharacterDetailFragment : Fragment() {
         val idsParam = episodeIds.joinToString(separator = ",")
 
 
-        ApiClient.apiService.getEpisodes(idsParam).enqueue(object : Callback<List<Episode>> {
+        RickAndMortyBaseApiClient.rickAndMortyCharactersApiService.getEpisodes(idsParam).enqueue(object : Callback<List<Episode>> {
             override fun onResponse(call: Call<List<Episode>>, response: Response<List<Episode>>) {
                 if (response.isSuccessful) {
                     response.body()?.let { episodes ->

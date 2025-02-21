@@ -1,15 +1,11 @@
     package com.example.rickandmorty.network
 
-import com.example.rickandmorty.model.CharacterResponse
 import retrofit2.converter.moshi.MoshiConverterFactory
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import retrofit2.Call
 import retrofit2.Retrofit
-import retrofit2.http.GET
-import retrofit2.http.Query
 
-object ApiClient {
+    object RickAndMortyBaseApiClient {
 
     private val  BASE_URL = "https://rickandmortyapi.com/api/"
 
@@ -23,8 +19,8 @@ object ApiClient {
             .build()
     }
 
-    val apiService: ApiService by lazy {
-        retrofit.create(ApiService::class.java)
+    val rickAndMortyCharactersApiService: RickAndMortyCharactersApiService by lazy {
+        retrofit.create(RickAndMortyCharactersApiService::class.java)
     }
 }
 

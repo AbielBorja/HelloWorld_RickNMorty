@@ -7,7 +7,7 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-interface ApiService {
+interface RickAndMortyCharactersApiService {
     @GET("character")
     fun fetchCharacters(@Query("page") page: String): Call<CharacterResponse>
 
