@@ -12,7 +12,8 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MainViewModel(private val repository: Repository = Repository(ApiClient.apiService)) : ViewModel() {
+class MainViewModel(private val repository: Repository = Repository(ApiClient.apiService)) :
+    ViewModel() {
     private val _pageCharactersLiveData = MutableLiveData<List<Character>>()
     val pageCharactersLiveData: LiveData<List<Character>> get() = _pageCharactersLiveData
 
@@ -22,28 +23,34 @@ class MainViewModel(private val repository: Repository = Repository(ApiClient.ap
     var hasMorePages = true
         private set
 
-    init { fetchCharacters() }
+    init {
+        fetchCharacters()
+    }
 
     fun fetchCharacters() {
         if (isLoading || !hasMorePages) return
         isLoading = true
-        Log.d("PAGINACION", "Cargando página: $currentPage")
+        Log.d("PAGINATION", "LOADING PAGE: $currentPage")
 
-        repository.getCharacters(currentPage.toString()).enqueue(object : Callback<CharacterResponse> {
-            override fun onResponse(call: Call<CharacterResponse>, response: Response<CharacterResponse>) {
-                isLoading = false
-                response.body()?.let { characterResponse ->
-                    val newCharacters = characterResponse.result
-                    accumulatedCharacters.addAll(newCharacters)
-                    _pageCharactersLiveData.postValue(newCharacters)
-                    hasMorePages = characterResponse.pageInfo.next != null
-                    if (hasMorePages) currentPage++
+        repository.getCharacters(currentPage.toString())
+            .enqueue(object : Callback<CharacterResponse> {
+                override fun onResponse(
+                    call: Call<CharacterResponse>,
+                    response: Response<CharacterResponse>
+                ) {
+                    isLoading = false
+                    response.body()?.let { characterResponse ->
+                        val newCharacters = characterResponse.result
+                        accumulatedCharacters.addAll(newCharacters)
+                        _pageCharactersLiveData.postValue(newCharacters)
+                        hasMorePages = characterResponse.pageInfo.next != null
+                        if (hasMorePages) currentPage++
+                    }
                 }
-            }
 
-            override fun onFailure(call: Call<CharacterResponse>, t: Throwable) {
-                isLoading = false
-            }
-        })
+                override fun onFailure(call: Call<CharacterResponse>, t: Throwable) {
+                    isLoading = false
+                }
+            })
     }
 }

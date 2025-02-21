@@ -6,7 +6,8 @@ import com.example.rickandmorty.model.Character
 import com.example.rickandmorty.ui.ViewHoders.CharacterViewHolder
 import com.example.rickandmorty.ui.ViewHoders.LoadingViewHolder
 
-class MainAdapter(private val charactersList: MutableList<Character>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class MainAdapter(private val charactersList: MutableList<Character>) :
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     companion object {
         private const val VIEW_TYPE_ITEM = 0
         private const val VIEW_TYPE_LOADING = 1
@@ -15,9 +16,12 @@ class MainAdapter(private val charactersList: MutableList<Character>) : Recycler
     private var isLoading = false
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
-        if (viewType == VIEW_TYPE_ITEM) CharacterViewHolder.create(parent) else LoadingViewHolder.create(parent)
+        if (viewType == VIEW_TYPE_ITEM) CharacterViewHolder.create(parent) else LoadingViewHolder.create(
+            parent
+        )
 
-    override fun getItemViewType(position: Int) = if (position < charactersList.size) VIEW_TYPE_ITEM else VIEW_TYPE_LOADING
+    override fun getItemViewType(position: Int) =
+        if (position < charactersList.size) VIEW_TYPE_ITEM else VIEW_TYPE_LOADING
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is CharacterViewHolder && position < charactersList.size) {

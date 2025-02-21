@@ -32,7 +32,8 @@ class MainActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.charactersRv)
         searchView = findViewById(R.id.search)
         adapter = MainAdapter(mutableListOf())
-        recyclerView.layoutManager = StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
+        recyclerView.layoutManager =
+            StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
         recyclerView.adapter = adapter
         recyclerView.addOnScrollListener(createScrollListener())
 
@@ -46,7 +47,6 @@ class MainActivity : AppCompatActivity() {
                 filterCharacters(query)
                 return true
             }
-
             override fun onQueryTextChange(newText: String?): Boolean {
                 filterCharacters(newText)
                 return true
@@ -58,7 +58,8 @@ class MainActivity : AppCompatActivity() {
         if (query.isNullOrEmpty()) {
             adapter.updateData(ArrayList(dataList))
         } else {
-            val filteredList = dataList.filter { it.characterName.contains(query, ignoreCase = true) }
+            val filteredList =
+                dataList.filter { it.characterName.contains(query, ignoreCase = true) }
             adapter.updateData(filteredList)
         }
     }
@@ -75,7 +76,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
 
     private fun createScrollListener() = object : RecyclerView.OnScrollListener() {
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {

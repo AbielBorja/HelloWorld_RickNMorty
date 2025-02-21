@@ -8,7 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.rickandmorty.R
 import com.example.rickandmorty.model.Episode
 
-class EpisodeAdapter(private val episodes: List<Episode>) : RecyclerView.Adapter<EpisodeAdapter.EpisodeViewHolder>() {
+class EpisodeAdapter(private val episodes: List<Episode>) :
+    RecyclerView.Adapter<EpisodeAdapter.EpisodeViewHolder>() {
 
     class EpisodeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val tvEpisodeName: TextView = itemView.findViewById(R.id.tvEpisodeName)

@@ -9,7 +9,8 @@ import com.example.rickandmorty.R
 class LoadingViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     companion object {
         fun create(parent: ViewGroup): LoadingViewHolder {
-            val view = LayoutInflater.from(parent.context).inflate(R.layout.loading_item, parent, false)
+            val view =
+                LayoutInflater.from(parent.context).inflate(R.layout.loading_item, parent, false)
             return LoadingViewHolder(view)
         }
     }
