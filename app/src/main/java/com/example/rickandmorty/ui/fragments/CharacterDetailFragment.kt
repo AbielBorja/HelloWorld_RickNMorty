@@ -16,7 +16,7 @@ import coil.load
 import coil.transform.CircleCropTransformation
 import com.example.rickandmorty.R
 import com.example.rickandmorty.model.Character
-import com.example.rickandmorty.ui.adapters.EpisodeAdapter
+import com.example.rickandmorty.ui.Adapters.EpisodeAdapter
 import com.example.rickandmorty.network.RickAndMortyBaseApiClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

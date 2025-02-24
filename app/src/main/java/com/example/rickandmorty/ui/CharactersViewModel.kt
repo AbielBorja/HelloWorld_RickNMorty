@@ -33,20 +33,18 @@ class CharactersViewModel(
         if (isLoading || !hasMorePages) return
         isLoading = true
 
-        // Launch on IO thread for network operations
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val response = repository.fetchCharacters(currentPage)
+                val response = repository.getCharacters(currentPage.toString())
                 val newCharacters = response.result
                 accumulatedCharacters.addAll(newCharacters)
-                // Post the new page of characters
                 _pageCharactersLiveData.postValue(newCharacters)
                 hasMorePages = response.pageInfo.next != null
                 if (hasMorePages) {
                     currentPage++
                 }
             } catch (e: Exception) {
-                // Optionally log or handle the error
+                // Manejo del error
             } finally {
                 isLoading = false
             }
