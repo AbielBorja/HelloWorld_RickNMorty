@@ -1,19 +1,16 @@
 package com.example.rickandmorty.ui
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.example.rickandmorty.model.Character
-import com.example.rickandmorty.network.RickAndMortyBaseApiClient
 import com.example.rickandmorty.repository.RickAndMortyRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class CharactersViewModel(
-    private val repository: RickAndMortyRepository = RickAndMortyRepository(
-        RickAndMortyBaseApiClient.rickAndMortyCharactersApiService
-    )
+@HiltViewModel
+class CharactersViewModel @Inject constructor(
+    private val repository: RickAndMortyRepository
 ) : ViewModel() {
 
     private val _pageCharactersLiveData = MutableLiveData<List<Character>>()
@@ -44,7 +41,7 @@ class CharactersViewModel(
                     currentPage++
                 }
             } catch (e: Exception) {
-                // Manejo del error
+
             } finally {
                 isLoading = false
             }

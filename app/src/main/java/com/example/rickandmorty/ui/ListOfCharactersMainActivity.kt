@@ -1,37 +1,36 @@
 package com.example.rickandmorty.ui
 
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.rickandmorty.R
 import com.example.rickandmorty.model.Character
 import com.example.rickandmorty.ui.adapters.CharactersAdapter
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ListOfCharactersMainActivity : AppCompatActivity() {
 
     private lateinit var charactersAdapter: CharactersAdapter
     private lateinit var recyclerView: RecyclerView
     private lateinit var searchView: SearchView
 
-    // Renamed ViewModel to a more descriptive name (assumes you renamed it below)
-    private val viewModel by lazy { ViewModelProvider(this).get(CharactersViewModel::class.java) }
+    // Inyecta el ViewModel con Hilt usando el delegado viewModels()
+    private val viewModel: CharactersViewModel by viewModels()
 
-    // Holds the complete list of characters for filtering
     private val allCharacters = ArrayList<Character>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContentView(R.layout.activity_main)
-
         setupRecyclerView()
         setupSearchView()
         observeViewModel()
     }
+
 
     private fun setupRecyclerView() {
         recyclerView = findViewById(R.id.charactersRv)
