@@ -1,4 +1,4 @@
-package com.example.rickandmorty.ui
+package com.example.rickandmorty.ui.ViewHoders
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,12 +6,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.rickandmorty.R
 
-class LoadingViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+class LoadingViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     companion object {
         fun create(parent: ViewGroup): LoadingViewHolder {
-            val view = LayoutInflater.from(parent.context).inflate(R.layout.loading_item, parent, false)
+            val view =
+                LayoutInflater.from(parent.context).inflate(R.layout.loading_item, parent, false)
             return LoadingViewHolder(view)
         }
     }
 }
-    

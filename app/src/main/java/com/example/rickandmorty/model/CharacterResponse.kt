@@ -1,8 +1,8 @@
 package com.example.rickandmorty.model
-import com.squareup.moshi.Json
+
+import com.google.gson.annotations.SerializedName
 
 data class CharacterResponse(
-    @Json(name = "info") val pageInfo: PageInfo,
-    @Json(name = "results") val result: List<Character>
+    @SerializedName("info") val pageInfo: PageInfo,
+    @SerializedName("results") val result: List<Character>
 )
-

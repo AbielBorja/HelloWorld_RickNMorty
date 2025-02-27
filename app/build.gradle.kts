@@ -1,6 +1,9 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    id("kotlin-parcelize")
+    id("kotlin-kapt")
+    id("dagger.hilt.android.plugin")
 }
 
 android {
@@ -34,31 +37,35 @@ android {
         jvmTarget = "11"
     }
 
-    buildFeatures{
-        viewBinding=true
+    buildFeatures {
+        viewBinding = true
     }
 }
 
+kapt {
+    correctErrorTypes = true
+}
+
 dependencies {
-
     implementation(libs.retrofit)
-
-    implementation (libs.moshi.kotlin)
-
-    implementation (libs.converter.moshi)
-
+    implementation(libs.gson)
+    implementation(libs.converter.gson)
     implementation(libs.coil)
 
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
-
     implementation(libs.androidx.lifecycle.livedata.ktx)
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.legacy.support.v4)
+    implementation(libs.androidx.fragment.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    // Dependencias de Hilt
+    implementation("com.google.dagger:hilt-android:2.55")
+    kapt("com.google.dagger:hilt-compiler:2.55")
 }
